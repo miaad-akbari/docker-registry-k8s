@@ -1,0 +1,29 @@
+
+ kind: StorageClass
+ apiVersion:  storage.k8s.io/v1
+ metadata:
+   name: docker-registry-storage
+   namespace: docker-registry
+ provisioner: kubernetes.io/glusterfs
+ reclaimPolicy: Delete
+ volumeBindingMode: Immediate
+ allowVolumeExpansion: true
+ parameters:
+   resturl: "ip"
+   restuser: "admin"
+   restuserkey: "admin"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: claim1
+ namespace: docker-registry
+ annotations:
+   volume.beta.kubernetes.io/storage-class:  docker-registry-storage
+spec:
+  storageClassName: docker-registry-storage
+  accessModes:
+  - ReadWriteMany
+  resources:
+   requests:
+        storage: 20Gi
